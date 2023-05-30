@@ -1,4 +1,10 @@
-import uvicorn
+from fastapi import FastAPI
+from server.routes import router as MatchRouter
 
-if __name__ == "__main__":
-    uvicorn.run("server.api:app", host="0.0.0.0", port=8000, reload=True)
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+  return {"message": "Hello World"}
+
+app.include_router(MatchRouter, prefix="/match")
