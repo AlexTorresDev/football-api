@@ -27,6 +27,12 @@ with open("server/label_encoder_transformations.json", "r") as json_file:
   reverse_transformation = json.load(json_file)
 
 
+def find(lst, val: int):
+  for key, value in lst.items():
+    if val == value:
+      return key
+    
+
 @router.post("/")
 def predict(match: MatchSchema = Body(...)) -> dict:
   neutral = 1
@@ -62,19 +68,19 @@ def predict(match: MatchSchema = Body(...)) -> dict:
   int_away_team_score = round(away_team_score[0])
 
   # Check if the home team won
-  if int_home_team_score > away_team_score:
-    winner = home_team
-  elif int_home_team_score < away_team_score:
-    winner = away_team
+  if int_home_team_score > int_away_team_score:
+    winner = find(reverse_transformation["home_team"], home_team)
+  elif int_home_team_score < int_away_team_score:
+    winner = find(reverse_transformation["away_team"], away_team)
   else:
     winner = "Draw"
 
   # Return the result
   return {
-    "home_team": home_team,
-    "away_team": away_team,
-    "country": country,
-    "neutral": neutral,
+    "home_team": find(reverse_transformation["home_team"], home_team),
+    "away_team": find(reverse_transformation["away_team"], away_team),
+    "country": find(reverse_transformation["country"], country),
+    "neutral": find(reverse_transformation["neutral"], neutral) == "True",
     "home_team_score": round(int_home_team_score),
     "away_team_score": round(int_away_team_score),
     "winner": winner
