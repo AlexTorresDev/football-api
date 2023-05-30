@@ -7,7 +7,8 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "https://alextrs.dev/football-front"
+    "https://alextrs.dev/football-front",
+    "https://alextrs.dev/football-front/"
 ]
 
 app.add_middleware(
